@@ -1,0 +1,76 @@
+# ============================================
+# SmartMarketWatch - Fichiers à ignorer
+# ============================================
+
+# --- Environnements virtuels Python ---
+venv/
+.venv/
+env/
+.env/
+ENV/
+
+# --- Cache Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# --- Données (trop volumineuses pour Git) ---
+# Décommenter si vous ne voulez pas versionner les données
+# data/raw/*.csv
+# data/processed/*.csv
+# data/reports/*.csv
+
+# --- Logs ---
+logs/*.log
+*.log
+
+# --- IDE et éditeurs ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Jupyter Notebooks ---
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# --- Tests ---
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# --- Build ---
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# --- Credentials (NE JAMAIS COMMITTER) ---
+*.env
+.env.local
+credentials.json
+secrets.json
+config.local.py
+
+# --- Chrome/Selenium ---
+chromedriver.exe
+chromedriver
+geckodriver.exe
+geckodriver
+
+# --- Fichiers temporaires ---
+*.tmp
+*.temp
+*.bak
