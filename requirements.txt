@@ -2,45 +2,51 @@
 # SmartMarketWatch - Dépendances Python
 # ============================================
 
-# --- MODULE RPA (Scraping) ---
+# --- RPA / Scraping ---
 selenium>=4.15.0
 webdriver-manager>=4.0.1
+
+# --- Data Processing ---
 pandas>=2.0.0
-
-# --- MODULE IA (Data Mining & NLP) ---
-# À installer par l'équipe IA
-# scikit-learn>=1.3.0
-# nltk>=3.8.0
-# spacy>=3.7.0
-# transformers>=4.35.0  # Pour l'analyse de sentiment avancée
-
-# --- MODULE BDD (Base de Donnees MySQL) ---
-# À installer par l'équipe BDD (Membre 3)
-# mysql-connector-python>=8.2.0
-
-# --- MODULE BI (Dashboard & Visualisation) ---
-# À installer par l'équipe BI (Membre 4)
-# Power BI Desktop (gratuit) - connexion directe a MySQL
-# plotly>=5.18.0
-# dash>=2.14.0
-# streamlit>=1.28.0  # Alternative legere pour le dashboard
-
-# --- UTILITAIRES COMMUNS ---
 numpy>=1.24.0
-python-dateutil>=2.8.0
-openpyxl>=3.1.0  # Pour export Excel
+python-dateutil>=2.8.2
+openpyxl>=3.1.0
 
-# --- DÉVELOPPEMENT ---
+# --- NLP & IA ---
+scikit-learn>=1.3.0
+scipy>=1.11.0
+spacy>=3.7.0
+textblob>=0.17.1
+vaderSentiment>=3.3.2
+transformers>=4.35.0
+torch>=2.1.0
+
+# --- Visualisation & BI ---
+matplotlib>=3.8.0
+seaborn>=0.13.0
+plotly>=5.17.0
+streamlit>=1.28.0
+
+# --- Utilitaires ---
+tqdm>=4.66.0
+joblib>=1.3.0
+
+# ============================================
+# DÉVELOPPEMENT (optionnel)
+# ============================================
 # pytest>=7.4.0
 # black>=23.0.0
 # flake8>=6.0.0
 
-# Module IA/Data Processing
-pandas>=2.0.0
-numpy>=1.24.0
-textblob>=0.17.1  # Pour l'analyse de sentiment (optionnel)
-
-# Module BI (à ajouter plus tard)
-# streamlit>=1.28.0
-# plotly>=5.17.0
-
+# ============================================
+# NOTES
+# ============================================
+# Modèles spaCy à installer séparément :
+# python -m spacy download fr_core_news_sm
+# python -m spacy download en_core_web_sm
+#
+# Téléchargement corpus TextBlob :
+# python -m textblob.download_corpora
+#
+# Installation complète :
+# pip install -r requirements.txt

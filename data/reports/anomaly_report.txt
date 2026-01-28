@@ -1,0 +1,37 @@
+
+========================================
+RAPPORT DE DÉTECTION D'ANOMALIES
+========================================
+
+RÉSUMÉ DES ANOMALIES DÉTECTÉES:
+- Anomalies prix (statistiques):  2
+- Anomalies ML (Isolation Forest): 10
+- Incohérences specs/prix:         0
+- Produits suspects (total):       28
+
+PRODUITS LES PLUS SUSPECTS:
+                                                                                                                     Titre  Prix_Actuel_Clean            Raisons_Suspicion
+18                             Hp EliteBook X360 G3 - Intel Core i5 - 8Go RAM - 512Go SSD - 13.3" Tactile - (Remis à Neuf)             3489.0                  Anomalie ML
+25                                                                            Hp Ordinateur Portable 250 G9 – i3 (778N7ES)             4610.0                Anomalie prix
+27                                      Lenovo Ordinateur portable-i5 1245u-16GB-256G SSD-Win10Pro-Azerty-Garantie 24 Mois            13960.0  Anomalie ML + Anomalie prix
+34                 Mini aspirateur de voiture automatique et souffleur d'air sans fil pour voiture, Aspirateur Trois En Un              114.0                 Prix extrême
+45                                                 Hp PC Portable Probook 640 Core i5 8eme 500Gb 4GB RAM 14"- remis a neuf             1989.0                  Anomalie ML
+52     Hp PC Portable ELITEBOOK 840 G7 -10810U- 10EME GENERATION -INTEL CORE I5-10éme -16GB- 512GB SSD- FHD - Remis à neuf             3899.0                  Anomalie ML
+66  Lenovo PC Portable ThinkPad L460 - 14" - Intel Core i5 6ème Génération - 16GB RAM + 512GB SSD - Windows - Remis à neuf             3499.0                  Anomalie ML
+69  Lenovo PC Portable ThinkPad T460 - 14" - Intel Core i5 6ème Génération - 16GB RAM + 512GB SSD - Windows - Remis à neuf             3599.0                  Anomalie ML
+70                        Table de lit pour Ordinateur Portable, Table de lit et canapé, Plateau de Petit-déjeuner, Pliant              129.0                 Prix extrême
+71                                    Handboss Bouteille 650ml Nettoyage Mousse universelle Agent spray PC Surface Cleaner               48.0                 Prix extrême
+
+STATISTIQUES D'ANOMALIES PAR GAMME:
+Gamme
+Entrée de gamme    20
+Haut de gamme       5
+Milieu de gamme     3
+
+DISTRIBUTION DES SCORES D'ANOMALIE ML:
+- Très anormal (<0.2):  1
+- Anormal (0.2-0.4):    0
+- Normal (0.4-0.6):     12
+- Très normal (>0.6):   81
+
+========================================
