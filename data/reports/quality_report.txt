@@ -1,0 +1,51 @@
+
+========================================
+RAPPORT DE QUALITÉ DES DONNÉES
+========================================
+Date: 2026-01-28 01:00:29
+
+STATISTIQUES GÉNÉRALES:
+- Produits initiaux:        200
+- Doublons supprimés:        3
+- Accessoires filtrés:       104
+- Produits finaux:           93
+
+COMPLÉTUDE DES DONNÉES:
+- Prix:                      93 / 93 (100.0%)
+- Marque:                    72 / 93 (77.4%)
+- CPU:                       67 / 93 (72.0%)
+- RAM:                       19 / 93 (20.4%)
+- Stockage:                  69 / 93 (74.2%)
+- Rating:                    43 / 93 (46.2%)
+
+STATISTIQUES PRIX:
+- Prix moyen:                2794.55 Dhs
+- Prix minimum:              48.00 Dhs
+- Prix maximum:              13960.00 Dhs
+- Réduction moyenne:         28.4%
+
+RÉPARTITION PAR MARQUE:
+Marque
+Hp         37
+Lenovo     22
+Autre      21
+Dell        6
+Asus        3
+Acer        2
+Xiaomi      1
+Samsung     1
+
+RÉPARTITION PAR GAMME:
+Gamme
+Entrée de gamme    47
+Milieu de gamme    28
+Haut de gamme      18
+
+RÉPARTITION PAR ÉTAT:
+Etat_Produit
+Remis à neuf    53
+Non spécifié    32
+Neuf             7
+Occasion         1
+
+========================================
