@@ -1,20 +1,21 @@
 """
-SmartMarketWatch - Pipeline Principal
-======================================
-Orchestrateur du projet ETL complet
+SmartMarketWatch - Pipeline Principal COMPLET
+==============================================
+Orchestrateur du projet ETL complet avec Database
 
-Pipeline en 3 étapes:
-    1. RPA    : Collecte des données (scraper.py)
-    2. IA     : Nettoyage et NLP (data_cleaner.py, feature_extractor.py)
-    3. BI/BDD : Stockage et visualisation
+Pipeline en 4 étapes:
+    1. RPA       : Collecte des données (scraper.py)
+    2. IA        : Nettoyage et NLP (data_cleaner.py, feature_extractor.py)
+    3. IA Avancée: NLP + ML (advanced - optionnel)
+    4. BDD       : Stockage SQLite (db_manager.py)
 
 Usage:
-    python main.py              # Pipeline complet par défaut
+    python main.py              # Pipeline complet
     python main.py --scrape     # Scraping uniquement
     python main.py --clean      # Nettoyage uniquement
     python main.py --enrich     # Enrichissement uniquement
     python main.py --advanced   # IA avancée (optionnel)
-    python main.py --help       # Aide
+    python main.py --database   # Création BDD uniquement
 """
 
 import argparse
@@ -46,13 +47,26 @@ def print_step(step_num, total_steps, title):
     print("-" * 70)
 
 
+def get_latest_data_file():
+    """Retourne le fichier de données le plus complet disponible"""
+    files = [
+        'data/processed/ai_advanced_complete.csv',
+        'data/processed/enriched_data.csv',
+        'data/processed/cleaned_data.csv',
+    ]
+    for f in files:
+        if Path(f).exists():
+            return Path(f)
+    return None
+
+
 # ============================================
-# FONCTIONS PAR ÉTAPE
+# ÉTAPE 1 : RPA
 # ============================================
 
 def etape_1_collecte():
-    """ÉTAPE 1/3 : Collecte des données (RPA)"""
-    print_step(1, 3, "COLLECTE DES DONNÉES (RPA)")
+    """ÉTAPE 1/4 : Collecte des données (RPA)"""
+    print_step(1, 4, "COLLECTE DES DONNÉES (RPA)")
     
     try:
         scraper_main()
@@ -66,9 +80,13 @@ def etape_1_collecte():
         return False
 
 
+# ============================================
+# ÉTAPE 2A : IA - NETTOYAGE
+# ============================================
+
 def etape_2a_nettoyage():
-    """ÉTAPE 2A/3 : Nettoyage des données (IA)"""
-    print_step("2A", 3, "NETTOYAGE DES DONNÉES (IA)")
+    """ÉTAPE 2A/4 : Nettoyage des données (IA)"""
+    print_step("2A", 4, "NETTOYAGE DES DONNÉES (IA)")
     
     try:
         cleaner = DataCleaner()
@@ -91,9 +109,13 @@ def etape_2a_nettoyage():
         return False
 
 
+# ============================================
+# ÉTAPE 2B : IA - ENRICHISSEMENT
+# ============================================
+
 def etape_2b_enrichissement():
-    """ÉTAPE 2B/3 : Enrichissement des données (IA)"""
-    print_step("2B", 3, "ENRICHISSEMENT DES DONNÉES (IA)")
+    """ÉTAPE 2B/4 : Enrichissement des données (IA)"""
+    print_step("2B", 4, "ENRICHISSEMENT DES DONNÉES (IA)")
     
     try:
         extractor = FeatureExtractor()
@@ -115,34 +137,31 @@ def etape_2b_enrichissement():
         return False
 
 
+# ============================================
+# ÉTAPE 2C : IA AVANCÉE (OPTIONNEL)
+# ============================================
+
 def etape_2c_ia_avancee():
-    """ÉTAPE 2C/3 : IA Avancée - NLP et Détection d'Anomalies (Optionnel)"""
-    print_step("2C", 3, "IA AVANCÉE - NLP ET DÉTECTION D'ANOMALIES (Optionnel)")
+    """ÉTAPE 2C/4 : IA Avancée - NLP et Détection d'Anomalies (Optionnel)"""
+    print_step("2C", 4, "IA AVANCÉE - NLP ET DÉTECTION D'ANOMALIES (Optionnel)")
     
-    # Vérifier que le fichier enrichi existe
     enriched_file = Path('data/processed/enriched_data.csv')
     if not enriched_file.exists():
         print("✗ Fichier enriched_data.csv introuvable")
         print("  Exécutez d'abord: python main.py --enrich")
         return False
     
-    # Vérifier que le module avancé existe
     advanced_module = Path('src/ai/advanced/pipeline_master.py')
     if not advanced_module.exists():
         print("⚠️  Module IA avancé non trouvé")
-        print("\n  Pour l'installer:")
-        print("    1. Créez le dossier: src/ai/advanced/")
-        print("    2. Copiez les fichiers:")
-        print("       - nlp_analyzer.py")
-        print("       - anomaly_detector.py")
-        print("       - pipeline_master.py")
-        print("    3. Installez les dépendances:")
-        print("       pip install scikit-learn scipy textblob")
+        print("\n  Installation:")
+        print("    1. mkdir -p src/ai/advanced")
+        print("    2. Copier les fichiers: nlp_analyzer.py, anomaly_detector.py, pipeline_master.py")
+        print("    3. pip install scikit-learn scipy textblob")
         print("\n  Le pipeline continue sans ce module.")
         return False
     
     try:
-        # Import dynamique pour éviter l'erreur si le module n'existe pas
         sys.path.insert(0, 'src/ai/advanced')
         from pipeline_master import AdvancedAIPipeline
         
@@ -171,19 +190,139 @@ def etape_2c_ia_avancee():
         return False
 
 
-def etape_3_stockage_visualisation():
-    """ÉTAPE 3/3 : Stockage (BDD) et Visualisation (BI)"""
-    print_step(3, 3, "STOCKAGE (BDD) ET VISUALISATION (BI)")
+# ============================================
+# ÉTAPE 3 : BASE DE DONNÉES
+# ============================================
+
+def etape_3_base_de_donnees():
+    """ÉTAPE 3/4 : Création de la base de données SQLite"""
+    print_step(3, 4, "CRÉATION DE LA BASE DE DONNÉES (SQLite)")
     
-    print("⚠️  Module BDD/BI non encore implémenté")
-    print("\n  Prochaines étapes:")
-    print("    1. Créer le schéma de la base de données (SQLite/MySQL)")
-    print("    2. Importer les données depuis enriched_data.csv")
-    print("    3. Créer le dashboard de visualisation (Streamlit/Power BI)")
-    print("\n  Fichiers à créer:")
-    print("    - src/bdd/schema.sql")
-    print("    - src/bdd/importer.py")
-    print("    - src/bi/dashboard.py")
+    # Vérifier les fichiers requis
+    db_manager_file = Path('src/database/db_manager.py')
+    schema_file = Path('src/database/schema.sql')
+    
+    if not db_manager_file.exists() or not schema_file.exists():
+        print("✗ Module Database non trouvé")
+        print("\n  Fichiers requis:")
+        print("    - src/database/db_manager.py")
+        print("    - src/database/schema.sql")
+        print("\n  Installation:")
+        print("    1. mkdir -p src/database")
+        print("    2. touch src/database/__init__.py")
+        print("    3. Copier db_manager.py et schema.sql dans src/database/")
+        return False
+    
+    # Trouver le fichier de données le plus complet
+    data_file = get_latest_data_file()
+    
+    if not data_file:
+        print("✗ Aucun fichier de données trouvé")
+        print("  Exécutez d'abord: python main.py --scrape --clean --enrich")
+        return False
+    
+    print(f"📂 Utilisation des données: {data_file}")
+    
+    try:
+        # Import du DatabaseManager
+        sys.path.insert(0, 'src/database')
+        from db_manager import DatabaseManager
+        
+        print("\n🗄️  Initialisation de la base de données...")
+        
+        # Créer l'instance
+        db = DatabaseManager()
+        
+        # Connexion
+        db.connect()
+        
+        # Créer le schéma
+        print("🔧 Création du schéma...")
+        db.create_schema()
+        
+        # Charger les données
+        print("📥 Chargement des données...")
+        db.load_csv_data(data_file)
+        
+        # Afficher les statistiques
+        print("\n📊 Statistiques de la base de données:")
+        stats = db.get_statistics()
+        total_lignes = 0
+        for table, count in stats.items():
+            print(f"  • {table:<25} {count:>6} lignes")
+            total_lignes += count
+        
+        print(f"\n  TOTAL: {total_lignes} lignes insérées")
+        
+        # Déconnexion
+        db.disconnect()
+        
+        # Afficher info fichier
+        db_path = Path('data/smartmarketwatch.db')
+        if db_path.exists():
+            size_kb = db_path.stat().st_size / 1024
+            print(f"\n✓ Base de données créée avec succès")
+            print(f"  Fichier: {db_path}")
+            print(f"  Taille: {size_kb:.1f} KB")
+        
+        return True
+        
+    except ImportError as e:
+        print(f"✗ Erreur d'import du module Database: {e}")
+        print("\n  Vérifiez que les fichiers sont bien dans src/database/:")
+        print("    - db_manager.py")
+        print("    - schema.sql")
+        print("    - __init__.py")
+        import traceback
+        traceback.print_exc()
+        return False
+    except Exception as e:
+        print(f"✗ Erreur lors de la création de la BDD: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+
+# ============================================
+# ÉTAPE 4 : BI / VISUALISATION
+# ============================================
+
+def etape_4_visualisation():
+    """ÉTAPE 4/4 : Dashboard de visualisation (BI)"""
+    print_step(4, 4, "DASHBOARD DE VISUALISATION (BI)")
+    
+    db_file = Path('data/smartmarketwatch.db')
+    
+    if db_file.exists():
+        print("✓ Base de données détectée")
+        print(f"  Fichier: {db_file}")
+        
+        print("\n💡 Requêtes SQL disponibles:")
+        print("  sqlite3 data/smartmarketwatch.db")
+        print("  > SELECT * FROM V_KPI_Prix_Marque;")
+        print("  > SELECT * FROM V_KPI_Sentiment;")
+        print("  > SELECT * FROM V_Analyse_Complete LIMIT 10;")
+    else:
+        print("⚠️  Base de données non trouvée")
+        print("  Exécutez d'abord: python main.py --database")
+    
+    dashboard_file = Path('src/bi/dashboard.py')
+    
+    if dashboard_file.exists():
+        print("\n✓ Module dashboard détecté")
+        print("\n  Pour lancer le dashboard interactif:")
+        print("    streamlit run src/bi/dashboard.py")
+    else:
+        print("\n⚠️  Module dashboard non encore implémenté")
+        print("\n  Prochaines étapes (Équipe BI):")
+        print("    1. Créer src/bi/dashboard.py")
+        print("    2. Utiliser Streamlit ou Power BI")
+        print("    3. Se connecter à data/smartmarketwatch.db")
+        print("    4. Créer les visualisations:")
+        print("       • Prix moyen par marque")
+        print("       • Distribution des sentiments")
+        print("       • Top 10 meilleures affaires")
+        print("       • Détection des anomalies")
     
     return True
 
@@ -196,23 +335,23 @@ def executer_pipeline_complet():
     """Exécute le pipeline ETL complet avec toutes les étapes"""
     print_banner("🚀 SMARTMARKETWATCH - PIPELINE COMPLET ETL 🚀")
     print(f"📅 Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"📦 Version: 2.0 (avec IA avancée optionnelle)")
+    print(f"📦 Version: 2.1 (avec Database SQLite)")
     
     start_time = time.time()
     results = {}
     
-    # ÉTAPE 1: Collecte des données (RPA)
+    # ÉTAPE 1: Collecte
     results['scraping'] = etape_1_collecte()
     if not results['scraping']:
         print("\n❌ Pipeline arrêté - Échec du scraping")
         return False
     
-    # ÉTAPE 2A: Nettoyage (IA)
+    # ÉTAPE 2A: Nettoyage
     results['nettoyage'] = etape_2a_nettoyage()
     if not results['nettoyage']:
         print("\n⚠️  Pipeline continue malgré l'échec du nettoyage")
     
-    # ÉTAPE 2B: Enrichissement (IA)
+    # ÉTAPE 2B: Enrichissement
     if results['nettoyage']:
         results['enrichissement'] = etape_2b_enrichissement()
     else:
@@ -223,22 +362,22 @@ def executer_pipeline_complet():
         print("\n" + "="*70)
         print("🤖 IA AVANCÉE DISPONIBLE (Optionnel)")
         print("="*70)
-        print("L'IA avancée ajoute:")
-        print("  • Extraction de 40+ caractéristiques techniques")
-        print("  • Analyse de sentiment avec NLP")
-        print("  • Détection d'anomalies avec Machine Learning")
-        print("  • Scoring de confiance et recommandations")
-        print("\nDurée estimée: 30-60 secondes supplémentaires")
+        print("Ajoute: NLP, ML, Sentiment Analysis, Détection d'anomalies")
+        print("Durée estimée: 30-60 secondes supplémentaires")
         print("-"*70)
         
-        # Pour une démo automatique, lancer directement
-        # Pour une interaction, demander confirmation ici
         results['ia_avancee'] = etape_2c_ia_avancee()
     else:
         results['ia_avancee'] = False
     
-    # ÉTAPE 3: BDD et BI
-    results['bdd_bi'] = etape_3_stockage_visualisation()
+    # ÉTAPE 3: Base de données
+    if results['nettoyage']:
+        results['database'] = etape_3_base_de_donnees()
+    else:
+        results['database'] = False
+    
+    # ÉTAPE 4: Visualisation
+    results['visualisation'] = etape_4_visualisation()
     
     # RÉSUMÉ FINAL
     duration = time.time() - start_time
@@ -248,127 +387,100 @@ def executer_pipeline_complet():
     
     print(f"\n✅ Modules exécutés:")
     status_icons = {True: "✓", False: "✗"}
-    for module, success in results.items():
-        icon = status_icons[success]
-        module_name = module.replace('_', ' ').title()
-        print(f"  {icon} {module_name}")
+    modules = {
+        'scraping': 'Scraping RPA',
+        'nettoyage': 'Nettoyage IA',
+        'enrichissement': 'Enrichissement IA',
+        'ia_avancee': 'IA Avancée (NLP+ML)',
+        'database': 'Base de Données SQLite',
+        'visualisation': 'Dashboard BI'
+    }
+    
+    for key, label in modules.items():
+        icon = status_icons[results.get(key, False)]
+        print(f"  {icon} {label}")
     
     print(f"\n📁 Fichiers générés:")
-    output_files = [
+    files = [
         ("Données brutes", "data/raw/raw_data.csv"),
         ("Données nettoyées", "data/processed/cleaned_data.csv"),
         ("Données enrichies", "data/processed/enriched_data.csv"),
         ("Analyse IA avancée", "data/processed/ai_advanced_complete.csv"),
+        ("Base de données", "data/smartmarketwatch.db"),
         ("Rapport qualité", "data/reports/quality_report.txt"),
         ("Rapport anomalies", "data/reports/anomaly_report.txt"),
         ("Rapport IA complet", "data/reports/ai_advanced_report.txt"),
     ]
     
-    for name, path in output_files:
+    for name, path in files:
         if Path(path).exists():
             size = Path(path).stat().st_size / 1024
-            print(f"  ✓ {name}: {path} ({size:.1f} KB)")
+            print(f"  ✓ {name:<25} {path} ({size:.1f} KB)")
     
     print(f"\n🎯 Prochaines étapes:")
-    print(f"  1. Créer le schéma BDD (src/bdd/schema.sql)")
-    print(f"  2. Importer les données dans la BDD (src/bdd/importer.py)")
-    print(f"  3. Créer le dashboard (src/bi/dashboard.py)")
-    print(f"  4. Soutenance: Présenter le pipeline ETL complet")
+    print(f"  1. Requêtes SQL: sqlite3 data/smartmarketwatch.db")
+    print(f"  2. Créer dashboard: src/bi/dashboard.py")
+    print(f"  3. Préparer la soutenance")
     
-    print_banner("✅ PIPELINE TERMINÉ AVEC SUCCÈS ✅")
+    print_banner("✅ PIPELINE COMPLET TERMINÉ AVEC SUCCÈS ✅")
     
     return True
 
 
 # ============================================
-# MAIN - GESTION DES ARGUMENTS
+# MAIN
 # ============================================
 
 def main():
     """Point d'entrée principal avec gestion des arguments"""
     
     parser = argparse.ArgumentParser(
-        description="SmartMarketWatch - Pipeline ETL de veille concurrentielle",
+        description="SmartMarketWatch - Pipeline ETL complet",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-Exemples d'utilisation:
-
-  PIPELINE COMPLET (Recommandé):
-    python main.py
-    python main.py --all
-
-  ÉTAPES INDIVIDUELLES:
-    python main.py --scrape       # Étape 1: Collecte RPA
-    python main.py --clean        # Étape 2A: Nettoyage IA
-    python main.py --enrich       # Étape 2B: Enrichissement IA
-    python main.py --advanced     # Étape 2C: IA avancée (optionnel)
-
-  COMBINAISONS:
-    python main.py --clean --enrich              # IA complète
-    python main.py --scrape --clean --enrich     # Pipeline sans IA avancée
-
-Modules disponibles:
-  • RPA: Scraping automatique de Jumia (Selenium)
-  • IA Base: Nettoyage + Extraction de features
-  • IA Pro: NLP + Détection d'anomalies ML (optionnel)
-  • BDD/BI: Stockage et visualisation (à implémenter)
+Exemples:
+  python main.py                # Pipeline complet
+  python main.py --all          # Pipeline complet
+  python main.py --scrape       # Scraping uniquement
+  python main.py --clean        # Nettoyage uniquement
+  python main.py --enrich       # Enrichissement uniquement
+  python main.py --advanced     # IA avancée uniquement
+  python main.py --database     # Création BDD uniquement
+  
+  python main.py --clean --enrich --database    # IA + BDD
         """
     )
 
-    parser.add_argument(
-        "--scrape", 
-        action="store_true", 
-        help="Étape 1: Collecte des données (RPA)"
-    )
-    parser.add_argument(
-        "--clean", 
-        action="store_true", 
-        help="Étape 2A: Nettoyage des données (IA)"
-    )
-    parser.add_argument(
-        "--enrich", 
-        action="store_true", 
-        help="Étape 2B: Enrichissement des données (IA)"
-    )
-    parser.add_argument(
-        "--advanced", 
-        action="store_true", 
-        help="Étape 2C: IA avancée - NLP et ML (optionnel)"
-    )
-    parser.add_argument(
-        "--all", 
-        action="store_true", 
-        help="Exécuter le pipeline complet (toutes les étapes)"
-    )
+    parser.add_argument("--scrape", action="store_true", help="Collecte RPA")
+    parser.add_argument("--clean", action="store_true", help="Nettoyage IA")
+    parser.add_argument("--enrich", action="store_true", help="Enrichissement IA")
+    parser.add_argument("--advanced", action="store_true", help="IA avancée (NLP+ML)")
+    parser.add_argument("--database", action="store_true", help="Création BDD SQLite")
+    parser.add_argument("--all", action="store_true", help="Pipeline complet")
 
     args = parser.parse_args()
 
-    # Si aucun argument, exécuter le pipeline complet par défaut
-    if not any([args.scrape, args.clean, args.enrich, args.advanced, args.all]):
+    # Si aucun argument, exécuter tout
+    if not any([args.scrape, args.clean, args.enrich, args.advanced, args.database, args.all]):
         args.all = True
 
     try:
-        # Pipeline complet
         if args.all:
             executer_pipeline_complet()
-        
-        # Exécution individuelle ou combinée
         else:
             if args.scrape:
                 etape_1_collecte()
-            
             if args.clean:
                 etape_2a_nettoyage()
-            
             if args.enrich:
                 etape_2b_enrichissement()
-            
             if args.advanced:
                 etape_2c_ia_avancee()
+            if args.database:
+                etape_3_base_de_donnees()
 
     except KeyboardInterrupt:
         print("\n\n⚠️  Interruption utilisateur (Ctrl+C)")
-        print("Pipeline arrêté")
         sys.exit(1)
     except Exception as e:
         print(f"\n❌ Erreur fatale: {e}")
